@@ -5,6 +5,8 @@ import compress from 'compression';
 import path from 'path';
 
 import services from './services';
+// instatiate sequelize, including db models
+import db from './database';
 
 const root = path.join(__dirname, '../../');
 const app = express();
