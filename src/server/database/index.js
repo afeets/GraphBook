@@ -3,6 +3,8 @@ import configFile from '../config/';
 import models from "../models";
 
 const env = process.env.NODE_ENV || 'development';
+
+console.log(`#### Loading in ${env} mode ####`)
 const config = configFile[env];
 
 const sequelize = new Sequelize(

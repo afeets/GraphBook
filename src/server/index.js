@@ -4,13 +4,20 @@ import cors from 'cors';
 import compress from 'compression';
 import path from 'path';
 
-import services from './services';
+import servicesLoader from './services';
+
 // instatiate sequelize, including db models
 import db from './database';
 
 const root = path.join(__dirname, '../../');
 const app = express();
-const serviceNames = Object.keys(services);
+
+
+const utils = {
+  db,
+};
+
+const services = servicesLoader(utils);
 
 if(process.env.NODE_ENV === 'production'){
   app.use(helmet()); // secure app setting HTTP Headers
@@ -37,10 +44,11 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(root, '/dist/client/index.html'));
 });
 
-
+const serviceNames = Object.keys(services);
 
 for (let i = 0; i < serviceNames.length; i += 1){
   const name = serviceNames[i];
+ 
   if(name === 'graphql'){
     (async () => {
       await services[name].start();
