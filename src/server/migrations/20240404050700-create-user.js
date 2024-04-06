@@ -12,7 +12,7 @@ module.exports = {
       avatar: {
         type: Sequelize.STRING
       },
-      user: {
+      username: {
         type: Sequelize.STRING
       },
       createdAt: {
