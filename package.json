@@ -12,6 +12,7 @@
   "author": "Andy Feetenby",
   "license": "ISC",
   "dependencies": {
+    "@apollo/client": "^3.9.10",
     "@graphql-tools/schema": "^10.0.3",
     "apollo-server-express": "^3.13.0",
     "compression": "^1.7.4",
