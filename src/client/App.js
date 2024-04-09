@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Helmet } from "react-helmet";
 import Feed from './Feed';
+import Chats from "./Chats";
 import '../assets/css/style.css';
 import { gql } from '@apollo/client';
 
@@ -13,6 +14,7 @@ const App = () => {
         <meta name="description" content="Newsfeed of all users on Graphbook" />
       </Helmet>
       <Feed />
+      <Chats />
     </div>
   )
 }

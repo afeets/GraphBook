@@ -21,6 +21,7 @@ const typeDefinitions = `
   type Chat {
     id: Int
     messages: [Message]
+    lastMessage: Message
     users: [User]
   }
 
