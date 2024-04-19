@@ -1,17 +1,10 @@
 import express from 'express';
+import path from 'path';
 import helmet from 'helmet';
 import cors from 'cors';
 import compress from 'compression';
-import path from 'path';
-
 import servicesLoader from './services';
-
-// instatiate sequelize, including db models
 import db from './database';
-
-const root = path.join(__dirname, '../../');
-const app = express();
-
 
 const utils = {
   db,
@@ -19,9 +12,12 @@ const utils = {
 
 const services = servicesLoader(utils);
 
-if(process.env.NODE_ENV === 'production'){
-  app.use(helmet()); // secure app setting HTTP Headers
-  
+const root = path.join(__dirname, '../../');
+
+const app = express();
+app.use(compress());
+if(process.env.NODE_ENV === 'production') {
+  app.use(helmet());
   app.use(helmet.contentSecurityPolicy({
     directives: {
       defaultSrc: ["'self'"],
@@ -30,36 +26,25 @@ if(process.env.NODE_ENV === 'production'){
       imgSrc: ["'self'", "data:", "*.amazonaws.com"]
     }
   }));
-
-  app.use(helmet.referrerPolicy({ policy: 'same-origin'}));
+  app.use(helmet.referrerPolicy({ policy: 'same-origin' }));
 }
-
-app.use(compress()); // compress all responses going through it
-app.use(cors()); // allow cross site
-
-// app.get('*', (req, res) => res.send('Hello World'));
+app.use(cors());
 app.use('/', express.static(path.join(root, 'dist/client')));
 app.use('/uploads', express.static(path.join(root, 'uploads')));
 app.get('/', (req, res) => {
   res.sendFile(path.join(root, '/dist/client/index.html'));
 });
-
 const serviceNames = Object.keys(services);
 
-for (let i = 0; i < serviceNames.length; i += 1){
+for (let i = 0; i < serviceNames.length; i += 1) {
   const name = serviceNames[i];
- 
-  if(name === 'graphql'){
+  if (name === 'graphql') {
     (async () => {
       await services[name].start();
       services[name].applyMiddleware({ app });
     })();
-  }
-  else {
+  } else {
     app.use(`/${name}`, services[name]);
   }
 }
-
-
-
-app.listen(8000, () => console.log('Listening on port 8000'));
+app.listen(8000, () => console.log('Listening on port 8000!'));

@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       this.belongsTo(models.User);
     }
-  }
+  };
   Post.init({
     text: DataTypes.TEXT,
     userId: DataTypes.INTEGER,

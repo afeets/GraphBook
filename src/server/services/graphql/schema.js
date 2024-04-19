@@ -1,14 +1,18 @@
 const typeDefinitions = `
+  type User {
+    id: Int
+    avatar: String
+    username: String
+  }
+
   type Post {
     id: Int
     text: String
     user: User
   }
 
-  type User {
-    id: Int
-    avatar: String
-    username: String
+  type PostFeed {
+    posts: [Post]
   }
 
   type Message {
@@ -21,23 +25,19 @@ const typeDefinitions = `
   type Chat {
     id: Int
     messages: [Message]
-    lastMessage: Message
     users: [User]
+    lastMessage: Message
   }
 
   type RootQuery {
     posts: [Post]
     chats: [Chat]
     chat(chatId: Int): Chat
+    postsFeed(page: Int, limit: Int): PostFeed
   }
 
   input PostInput {
     text: String!
-  }
-
-  input UserInput {
-    username: String!
-    avatar: String!
   }
 
   input ChatInput {
@@ -67,4 +67,4 @@ const typeDefinitions = `
   }
 `;
 
-export default [ typeDefinitions ]
+export default [typeDefinitions];

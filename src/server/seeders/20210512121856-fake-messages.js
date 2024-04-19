@@ -1,40 +1,38 @@
 'use strict';
 
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  up: async (queryInterface, Sequelize) => {
     const usersAndChats = Promise.all([
       queryInterface.sequelize.query(
-        'SELECT id FROM Users;',
+        'SELECT id from Users;',
       ),
       queryInterface.sequelize.query(
-        'SELECT id FROM Chats;',
+        'SELECT id from Chats;',
       ),
     ]);
 
     return usersAndChats.then((rows) => {
       const users = rows[0][0];
       const chats = rows[1][0];
-    
+
       return queryInterface.bulkInsert('Messages', [{
         userId: users[0].id,
         chatId: chats[0].id,
-        text: 'This is a text message',
+        text: 'This is a test message.',
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
         userId: users[1].id,
         chatId: chats[0].id,
-        text: 'This is a second test message',
+        text: 'This is a second test message.',
         createdAt: new Date(),
         updatedAt: new Date(),
       }],
       {});
-    })
+    });
   },
-
-  async down (queryInterface, Sequelize) {
+  down: async (queryInterface, Sequelize) => {
     return queryInterface.bulkDelete('Messages', null, {});
   }
 };

@@ -11,9 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       this.belongsTo(models.User);
-      this.belongsTo(models.Chat)
+      this.belongsTo(models.Chat);
     }
-  }
+  };
   Message.init({
     text: DataTypes.STRING,
     userId: DataTypes.INTEGER,
