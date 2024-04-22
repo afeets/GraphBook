@@ -1,4 +1,8 @@
 const typeDefinitions = `
+  type Response {
+    success: Boolean
+  }
+  
   type User {
     id: Int
     avatar: String
@@ -59,6 +63,10 @@ const typeDefinitions = `
     addMessage (
       message: MessageInput!
     ): Message
+
+    deletePost (
+      postId: Int!
+    ) : Response
   }
 
   schema {

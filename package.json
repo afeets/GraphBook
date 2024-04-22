@@ -21,6 +21,10 @@
   "homepage": "https://github.com/Sebi55/Hands-on-Full-Stack-Web-Development-with-GraphQL-and-React-2nd-Edition#readme",
   "dependencies": {
     "@apollo/client": "^3.9.11",
+    "@fortawesome/fontawesome-svg-core": "^6.5.2",
+    "@fortawesome/free-brands-svg-icons": "^6.5.2",
+    "@fortawesome/free-solid-svg-icons": "^6.5.2",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@graphql-tools/schema": "^8.5.1",
     "apollo-server-express": "^3.13.0",
     "compression": "^1.7.4",
