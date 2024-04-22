@@ -9,6 +9,10 @@ const typeDefinitions = `
     username: String
   }
 
+  type UsersSearch {
+    users: [User]
+  }
+
   type Post {
     id: Int
     text: String
@@ -38,6 +42,7 @@ const typeDefinitions = `
     chats: [Chat]
     chat(chatId: Int): Chat
     postsFeed(page: Int, limit: Int): PostFeed
+    usersSearch(page: Int, limit: Int, text: String!): UsersSearch
   }
 
   input PostInput {
