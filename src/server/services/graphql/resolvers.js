@@ -1,4 +1,8 @@
 import logger from '../../helpers/logger';
+import bcrypt from 'bcrypt';
+import JWT from 'jsonwebtoken';
+
+const { JWT_SECRET } = process.env;
 
 export default function resolver() {
   const {
@@ -154,6 +158,40 @@ export default function resolver() {
       },
     },
     RootMutation: {
+      login(root, { email, password }, context){
+        // query users where email matches
+        return User.findAll({
+          where: {
+            email
+          },
+          raw: true
+        }).then(async (users) => {
+          if(users.length = 1){
+            const user = users[0];
+            // compare passwords
+            const passwordValid = await bcrypt.compare(password, user.password);
+
+            if (!passwordValid){
+              throw new Error('Password does not match');
+            }
+            
+            // generate token
+            const token = JWT.sign({ email, id: user.id },
+              JWT_SECRET, {
+                expiresIn: '1d'
+              }
+            );
+
+            // return token object
+            return {
+              token
+            };
+          }
+          else {
+            throw new Error("User not found");
+          }
+        });
+      },
       addChat(root, {
         chat
       }, context) {

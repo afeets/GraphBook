@@ -1,4 +1,8 @@
 const typeDefinitions = `
+  type Auth {
+    token: String
+  }
+  
   type Response {
     success: Boolean
   }
@@ -59,6 +63,10 @@ const typeDefinitions = `
   }
 
   type RootMutation {
+    login (
+      email: String!
+      password: String!
+    ): Auth
     addPost (
       post: PostInput!
     ): Post
