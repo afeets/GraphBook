@@ -2,7 +2,7 @@ const typeDefinitions = `
   type Auth {
     token: String
   }
-  
+
   type Response {
     success: Boolean
   }
@@ -67,6 +67,13 @@ const typeDefinitions = `
       email: String!
       password: String!
     ): Auth
+
+    signup (
+      username: String!
+      email: String!
+      password: String!
+    ): Auth
+    
     addPost (
       post: PostInput!
     ): Post

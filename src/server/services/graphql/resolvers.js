@@ -1,7 +1,9 @@
 import logger from '../../helpers/logger';
 import bcrypt from 'bcrypt';
 import JWT from 'jsonwebtoken';
+import { Sequelize } from 'sequelize';
 
+const Op = Sequelize.Op;
 const { JWT_SECRET } = process.env;
 
 export default function resolver() {
@@ -189,6 +191,42 @@ export default function resolver() {
           }
           else {
             throw new Error("User not found");
+          }
+        });
+      },
+      signup(root, { email, password, username }, context){
+        return User.findAll({
+          where: {
+            [Op.or]: [{ email }, { username }]
+          },
+          raw: true,
+        }).then(async (users) => {
+          if(users.length){
+            throw new Error('User already exists');
+          }
+          else {
+            return bcrypt.hash(password, 10).then((hash) => {
+              return User.create({
+                email,
+                password: hash,
+                username,
+                activated: 1,
+              }).then(( newUser ) => {
+                const token = JWT.sign(
+                  { 
+                    email, 
+                    id: newUser.id 
+                  }, 
+                  JWT_SECRET,
+                  {
+                    expiresIn: '1d'
+                  }
+                );
+                return {
+                  token
+                };
+              });
+            });
           }
         });
       },
