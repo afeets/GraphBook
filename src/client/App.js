@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { withApollo } from '@apollo/client/react/hoc';
 import { Helmet } from 'react-helmet';
 import { UserProvider } from './components/context/user';
 import LoginRegisterForm from './components/loginRegister';
@@ -10,10 +11,32 @@ import './components/fontawesome';
 import Bar from './components/bar';
 import Loading from './components/Loading';
 
-const App = () => {
+const App = ({ client }) => {
     // store whether user logged in, also on first render of app, check state based on local storage
     const [ loggedIn, setLoggedIn ] = useState(!!localStorage.getItem('jwt'));
     const { data, error, loading, refetch } = useCurrentUserQuery();
+
+    // log user out automatically when JWT expires
+    useEffect(() => {
+        const unsubscribe = client.onClearStore(
+            () => {
+                if(loggedIn){
+                    setLoggedIn(false)
+                }
+            }
+        );
+        return () => {
+            unscubscribe();
+        }
+    }, []);
+
+    const handleLogin = (status) => {
+        refetch().then(() => {
+            setLoggedIn(status);
+        }).catch(() => {
+            setLoggedIn(status);
+        });
+    }
 
     if (loading){
         return <Loading />;
@@ -27,14 +50,14 @@ const App = () => {
             </Helmet>
             { loggedIn && (
                 <div>
-                    <Bar changeLoginState={setLoggedIn} />
+                    <Bar changeLoginState={handleLogin} />
                     <Feed />
                     <Chats />
                 </div>
             )}
-            {!loggedIn && <LoginRegisterForm changeLoginState={setLoggedIn} />}
+            {!loggedIn && <LoginRegisterForm changeLoginState={handleLogin} />}
         </div>
     )
 }
 
-export default App
+export default withApollo(App);
