@@ -33,9 +33,9 @@ const typeDefinitions = `
 
   type RootQuery {
     currentUser: User @auth
-    posts: [Post]
+    posts: [Post] @auth
     chats: [Chat] @auth
-    chat(chatId: Int): Chat
+    chat(chatId: Int): Chat @auth
     postsFeed(page: Int, limit: Int): PostFeed @auth
     usersSearch(page: Int, limit: Int, text: String!): UsersSearch
   }

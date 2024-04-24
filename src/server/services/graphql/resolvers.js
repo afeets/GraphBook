@@ -54,6 +54,9 @@ export default function resolver() {
       },
     },
     RootQuery: {
+      currentUser(root, args, context){
+        return context.user;
+      },
       usersSearch(root, { page, limit, text }, context){
         if(text.length < 3){
           return {
@@ -120,28 +123,20 @@ export default function resolver() {
         });
       },
       chats(root, args, context) {
-        return User.findAll().then((users) => {
-          if (!users.length) {
-            return [];
-          }
-
-          const usersRow = users[0];
-
-          return Chat.findAll({
-            include: [{
-                model: User,
-                required: true,
-                through: {
-                  where: {
-                    userId: usersRow.id
-                  }
-                },
+        return Chat.findAll({
+          include: [{
+              model: User,
+              required: true,
+              through: {
+                where: {
+                  userId: context.user.id
+                }
               },
-              {
-                model: Message,
-              }
-            ],
-          });
+            },
+            {
+              model: Message,
+            }
+          ],
         });
       },
       chat(root, {
